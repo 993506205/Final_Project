@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert Courses Page</title>
+			<link rel="stylesheet" href="table.css">
+			<link rel="stylesheet" href="login.css">
+	</head>
+	
+	<body>
+	
+	
+	<script>
+		function getCurriculem(){
+			var request = new XMLHttpRequest();
+				request.open("GET", "http://localhost:8000/curriculums/", false);
+				request.setRequestHeader("Authorization", "Basic " + btoa("admin:password123"));
+				request.send();
+				var array = JSON.parse(request.responseText);
+				var temp = "<select id = currCombox>";
+				for(var i=1;i<=array.length;i++){
+				 var url = array[i-1].url;
+				 temp+= "<option value='" + url +"'>"+ url +"</option>";	
+			}
+			    temp+="</select>";
+				return temp;
+		}
+		
+		function getImplement(){
+				var request = new XMLHttpRequest();
+				request.open("GET", "http://localhost:8000/implements/", false);
+				request.setRequestHeader("Authorization", "Basic " + btoa("admin:password123"));
+				request.send();
+				var array = JSON.parse(request.responseText);
+				var temp = "<select id = impCombox>";
+				for(var i=1;i<=array.length;i++){
+				 var url = array[i-1].url;
+				 temp+= "<option value='" + url +"'>"+ url +"</option>";	
+			}
+			    temp+="</select>";
+				return temp;
+		}
+	</script>
+	
+	<div class="container">
+	<section id="content">
+		<form action="List.html">
+			<h1>Insert Course</h1>
+			<div>
+				<input type="text" placeholder="Course Code" required="" id="code" />
+			</div>
+			<div>
+				<input type="text" placeholder="Course Name" required="" id="name" />
+			</div>
+			<div>
+				<input type="text" placeholder="Course Type" required="" id="type" />
+			</div>
+			<div>
+				<input type="text" placeholder="Course Language" required="" id="language" />
+			</div>
+			<div>
+				<input type="text" placeholder="Course Credit" required="" id="credit" />
+			</div>
+			<div>
+				<p>Curriculum Id:<script>document.write(getCurriculem());</script></p>
+				<p>Implement Id:<script>document.write(getImplement());</script></p>
+			</div>
+			<div id="button" onclick="postCourses()">
+					<input type="submit" value="Add Course"/>
+			</div>
+		</form>
+	</section>
+	</div>
+		
+		
+		<div id="id1"></div>
+
+
+	<body>
+		<script>
+	function postCourses(){
+		 var courseCode=document.getElementById("code");
+		 var courseName = document.getElementById("name");
+		 var courseType = document.getElementById("type");
+		 var courseLan = document.getElementById("language");
+		 var courseCredit = document.getElementById("credit");
+		 var comboxValue =  document.getElementById("currCombox");
+		 var impComboxValue = document.getElementById("impCombox");
+		 var jsonData = '{"code":'+JSON.stringify(courseCode.value)
+						+',"name":'+JSON.stringify(courseName.value)
+						+',"type":'+JSON.stringify(courseType.value)
+						+',"language":'+JSON.stringify(courseLan.value) 
+						+',"credit":'+JSON.stringify(courseCredit.value)
+						+',"curriculumid":'+JSON.stringify(comboxValue.options[comboxValue.selectedIndex].text)
+						+',"implementid":'+JSON.stringify(impComboxValue.options[impComboxValue.selectedIndex].text)
+						+ '}';
+						alert(JSON.stringify(comboxValue.options[comboxValue.selectedIndex].text));
+		 var request = new XMLHttpRequest();
+		 request.open("POST", "http://localhost:8000/courses/", false);
+		 request.setRequestHeader("Authorization", "Basic " + btoa("admin:password123"));
+		 request.setRequestHeader("X-CSRFToken", readCookie("csrftoken"));
+		 request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		 request.send(jsonData);
+		 var array = JSON.parse(request.responseText);
+		 console.log(array);
+		 alert("Post successfully!"); 
+		document.getElementById("code").value = "";
+		document.getElementById("name").value = "";
+		document.getElementById("type").value = "";
+		document.getElementById("language").value = "";
+		document.getElementById("credit").value = "";
+
+
+}
+
+ function readCookie(name) {
+ var nameEQ = encodeURIComponent(name) + "=";
+ var ca = document.cookie.split(';');
+ for (var i = 0; i < ca.length; i++) {
+ var c = ca[i];
+ while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+ if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+ }
+ return null;
+}
+
+
+</script>
+</body>
+		<div class="button">
+			<a href="Courses.html">Previous</a>
+		</div>
+</html>

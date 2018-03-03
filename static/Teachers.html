@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Teacher Page</title>
+			<link rel="stylesheet" href="table.css">
+			<link rel="stylesheet" href="login.css">
+	</head>
+		<div id="id2"></div>
+
+	<body>
+		<script>
+			getTeachers();
+			function getTeachers(){
+				var request = new XMLHttpRequest();
+				request.open("GET", "http://localhost:8000/teachers", false);
+				request.setRequestHeader("Authorization", "Basic " + btoa("admin:password123"));
+				request.send();
+				var array = JSON.parse(request.responseText);
+				var temp="<table class='ljy-table ljy-table-rounded ljy-table-highlight-all'><tr><th>id</th><th>Teacher Code</th><th>Teacher Name</th></tr>";
+				
+				for(var i=0;i<array.length;i++){
+					var url = array[i].url;
+					var code = array[i].code;
+					var name = array[i].name;
+					temp+="<tr><td>"+url+"</td><td>" + code + "</td><td>" + name + "</td></tr>";
+				}
+				console.log(temp);
+				temp+="</table>"+"<div class=button onClick=getImplement()><a>Get Implements</a></div>";
+				document.getElementById("id2").innerHTML = temp;
+			}
+			
+
+			function getImplement(){
+				var request = new XMLHttpRequest();
+				request.open("GET", "http://localhost:8000/implements/", false);
+				request.setRequestHeader("Authorization", "Basic " + btoa("admin:password123"));
+				request.send();
+				var array = JSON.parse(request.responseText);
+				var temp="<table class='ljy-table ljy-table-rounded ljy-table-highlight-all'><tr><th>id</th><th>Code</th></tr>";
+				for(var i=0;i<array.length;i++){
+					var url = array[i].url;
+					var id = array[i].id;
+				temp+="<tr><td>"+url+"</td><td>"+id+"</td></tr>";
+				}
+				
+				console.log(temp);
+				temp+="</table>"+"<div class=button onClick=getTeachers()><a>Get Teachers</a></div>";
+				document.getElementById("id2").innerHTML = temp;
+			
+			}
+		</script>
+		</body>
+</body>
+		<div class="button">
+			<a href="List.html">Previous</a>
+		</div>
+</html>
